@@ -17,7 +17,7 @@ impl ResizeType {
             "exact" => Self::Exact,
             "thumbnail" => Self::Thumbnail,
             "fill" => Self::Fill,
-            "crop" => Self::Crop,
+            // "crop" => Self::Crop,
             _ => Self::None,
         }
     }

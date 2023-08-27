@@ -84,5 +84,7 @@ fn transform_image(path: &PathBuf, params: &Parameters) {
     params
         .rotation
         .rotate_image(params.flip_horizontal, params.flip_vertical, &mut img.image);
-    _ = params.format.reformat_image(&mut img, params.quality);
+    _ = params
+        .format
+        .reformat_image(&mut img, params.quality, params.speed);
 }

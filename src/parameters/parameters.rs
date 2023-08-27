@@ -1,3 +1,4 @@
+use anyhow::Error;
 use clap::Parser;
 use format::Format;
 use image::imageops;
@@ -33,6 +34,8 @@ pub struct Parameters {
     pub format: Format,
     #[arg(short='Q', long="quality", default_value ="75.0", value_parser=quality_in_range, required = false)]
     pub quality: f32,
+    #[arg(short = 'S', long, default_value = "7", value_parser=get_effort, required = false)]
+    pub speed: u8,
     #[arg(short, long, default_value = "0", value_parser=get_rotation, required = false)]
     pub rotation: Rotation,
     #[arg(short = 's', long, default_value = "false", required = false)]
@@ -55,7 +58,7 @@ impl Parameters {
             "Description : This is a simple image manipulator made in Rust. 
         It can resize, rotate, flip and convert images in bulk or one at a time."
         );
-        println!("Implementation : This program uses the clap, anyhow, image, rayon, jwalk and kamadak-exif crates.");
+        println!("Implementation : This program uses the clap, anyhow, image, rayon, jwalk, ravif, rgb, webp and kamadak-exif crates.");
 
         println!("\n############################ Commands ##############################\n");
 
@@ -66,8 +69,9 @@ impl Parameters {
         println!("--height <h> : The desired height of the image.");
         println!("--resize_type <t> : The type of resizing to be done. The options are Exact, Thumbnail, Fill and Crop.");
         println!("--filter <f> : The filter to be used when resizing. The options are Triangle, CatmullRom, Gaussian, Nearest and Lanczos3.");
-        println!("--format <F> : The format to be used when saving the image. The options are Jpeg, Png, Tiff, Webp and None.");
+        println!("--format <F> : The format to be used when saving the image. The options are Jpeg, Png, Tiff, Webp, Avif and None.");
         println!("--quality <Q> : The quality of the image when converting to Webp. The options are between 1.0 and 100.00.");
+        println!("--speed <S> : The speed to be used when converting to Avif. 1 is very slow and 10 is fast. The options are between 0 and 10.");
         println!("--rotation <r> : The rotation to be done on the image. The options are 90, 180, 270 and None.");
         println!("--flip_horizontal <s> : If the image should be flipped horizontally.");
         println!("--flip_vertical <v> : If the image should be flipped vertically.");
@@ -77,12 +81,27 @@ impl Parameters {
         println!("Input directory : {:?}", self.input_dir);
         println!("Output directory : {:?}", self.output_dir);
         println!("Recursive : {:?}", self.recursive);
-        println!("Width : {:?}", self.width);
-        println!("Height : {:?}", self.height);
+        if let Some(width) = self.width {
+            println!("Width : {:?}", width);
+        } else {
+            println!("Width : Self calculated");
+        }
+        if let Some(height) = self.height {
+            println!("Height : {:?}", height);
+        } else {
+            println!("Height : Self calculated");
+        }
         println!("Resize type : {:?}", self.resize_type);
-        println!("Filter : {:?}", self.filter);
+        if self.resize_type == ResizeType::Exact || self.resize_type == ResizeType::Fill {
+            println!("Filter : {:?}", self.filter);
+        }
         println!("Format : {:?}", self.format);
-        println!("Quality : {:?}", self.quality);
+        if self.format == Format::WEBP || self.format == Format::AVIF {
+            println!("Quality : {:?}", self.quality);
+        }
+        if self.format == Format::AVIF {
+            println!("Speed : {:?}", self.speed);
+        }
         println!("Rotation : {:?}", self.rotation);
         println!("Flip_horizontal : {:?}", self.flip_horizontal);
         println!("Flip_vertical : {:?}", self.flip_vertical);
@@ -108,6 +127,15 @@ fn get_format(s: &str) -> Result<Format, anyhow::Error> {
 }
 fn get_rotation(s: &str) -> Result<Rotation, anyhow::Error> {
     Ok(Rotation::new(s))
+}
+const EFFORT_RANGE: RangeInclusive<u8> = 0..=10;
+fn get_effort(s: &str) -> Result<u8, anyhow::Error> {
+    let effort = s.parse::<u8>().expect("Effort is not a between 0 and 10");
+    if EFFORT_RANGE.contains(&effort) {
+        Ok(effort)
+    } else {
+        Err(Error::msg("Effort is not a between 0 and 10"))
+    }
 }
 
 const QUALITY_RANGE: RangeInclusive<f32> = 1.0..=100.0;

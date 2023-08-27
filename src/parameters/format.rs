@@ -1,4 +1,6 @@
 use image::{ImageError, ImageFormat};
+use ravif::*;
+use rgb::*;
 
 use crate::picture::Picture;
 
@@ -8,7 +10,7 @@ pub enum Format {
     JPEG,
     TIFF,
     WEBP,
-    //AVIF,
+    AVIF,
     None,
 }
 
@@ -19,12 +21,17 @@ impl Format {
             "jpeg" => Self::JPEG,
             "tiff" => Self::TIFF,
             "webp" => Self::WEBP,
-            //      "avif" => Self::AVIF,
+            "avif" => Self::AVIF,
             _ => Self::None,
         }
     }
 
-    pub fn reformat_image(&self, img: &mut Picture, quality: f32) -> Result<(), ImageError> {
+    pub fn reformat_image(
+        &self,
+        img: &mut Picture,
+        quality: f32,
+        speed: u8,
+    ) -> Result<(), ImageError> {
         if img.output_path.exists() {
             create_new_output_path(img);
         }
@@ -46,9 +53,21 @@ impl Format {
                 _ = std::fs::write(img.output_path.to_owned(), encoded_img);
                 Ok(())
             }
-            // Self::AVIF => img
-            //     .image
-            //     .save_with_format(img.output_path.to_owned(), ImageFormat::Avif),
+            Self::AVIF => {
+                let raw = img.image.to_rgba8().into_raw();
+                let rgb: &[RGBA8] = raw.as_rgba();
+                let avif = Encoder::new()
+                    .with_speed(speed)
+                    .with_quality(quality)
+                    .encode_rgba(Img::new(
+                        &rgb,
+                        img.image.width().try_into().unwrap(),
+                        img.image.height().try_into().unwrap(),
+                    ))
+                    .expect("Failed to encode avif");
+                _ = std::fs::write(img.output_path.to_owned(), avif.avif_file);
+                Ok(())
+            }
             Self::None => img.image.save(img.output_path.to_owned()),
         }
     }
@@ -59,7 +78,7 @@ impl Format {
             Self::JPEG => "jpeg",
             Self::TIFF => "tiff",
             Self::WEBP => "webp",
-            // Self::AVIF => "avif",
+            Self::AVIF => "avif",
             Self::None => "",
         }
     }
