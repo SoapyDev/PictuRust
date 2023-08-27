@@ -22,7 +22,7 @@ Homebrew:
 ```
 brew install nasm
 ```
-#### Run the program
+#### Build from source
 
 ```
 cargo run --release -- -i /path/to/image -o /path/to/desired/output -w width
