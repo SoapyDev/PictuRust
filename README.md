@@ -22,6 +22,8 @@ Homebrew:
 ```
 brew install nasm
 ```
+--------------------
+
 #### Build from source
 
 ```
