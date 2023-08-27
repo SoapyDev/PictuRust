@@ -11,14 +11,14 @@ Fedora:
 ```
 sudo dnf install nasm
 ```
-Ubuntu: 
-```
-sudo apt-get install nasm
-```
-Winget: 
+Windows: 
 ```
 winget install -e --id NASM.NASM
-```
+``
+NASM will not go into your path by itself. To do so, you can follow this tutorial
+https://labs.bilimedtech.com/nasm/windows-install/2.html#download-netwide-assembler-nasm
+
+
 Homebrew: 
 ```
 brew install nasm
