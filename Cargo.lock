@@ -855,12 +855,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "nasm"
-version = "0.0.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e94c0a4df47a3bb6ed27c447abdeadb2c72e179a727bbf3be9d692a235788536"
-
-[[package]]
 name = "nasm-rs"
 version = "0.2.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -992,7 +986,6 @@ dependencies = [
  "image",
  "jwalk",
  "kamadak-exif",
- "nasm",
  "ravif",
  "rayon",
  "rgb",

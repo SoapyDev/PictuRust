@@ -7,7 +7,7 @@ pub enum ResizeType {
     Exact,
     Thumbnail,
     Fill,
-    Crop,
+    // Crop,
     None,
 }
 
@@ -49,7 +49,7 @@ impl ResizeType {
                     .image
                     .resize_to_fill(resize_width, resize_height, *filter);
             }
-            ResizeType::Crop => {}
+            // ResizeType::Crop => {}
             ResizeType::None => {}
         }
     }

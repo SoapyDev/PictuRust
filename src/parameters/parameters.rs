@@ -67,7 +67,7 @@ impl Parameters {
         println!("--recursive <r> : If the program should go through the subdirectories of the input directory.");
         println!("--width <w> : The desired width of the image.");
         println!("--height <h> : The desired height of the image.");
-        println!("--resize_type <t> : The type of resizing to be done. The options are Exact, Thumbnail, Fill and Crop.");
+        println!("--resize_type <t> : The type of resizing to be done. The options are Exact, Thumbnail and Fill.");
         println!("--filter <f> : The filter to be used when resizing. The options are Triangle, CatmullRom, Gaussian, Nearest and Lanczos3.");
         println!("--format <F> : The format to be used when saving the image. The options are Jpeg, Png, Tiff, Webp, Avif and None.");
         println!("--quality <Q> : The quality of the image when converting to Webp. The options are between 1.0 and 100.00.");
