@@ -1,8 +1,32 @@
 # PictuRust
 
 ## Image manipulator - Written in Rust
------------------
+
 ### Usage
+---------------------------------
+
+#### Install Nasm
+
+Fedora: 
+```
+sudo dnf install nasm
+```
+Windows: 
+```
+winget install -e --id NASM.NASM
+```
+NASM will not go into your path by itself. To do so, you can follow this tutorial
+https://labs.bilimedtech.com/nasm/windows-install/2.html#download-netwide-assembler-nasm
+
+
+Homebrew: 
+```
+brew install nasm
+```
+--------------------
+
+#### Build from source
+
 ```
 cargo run --release -- -i /path/to/image -o /path/to/desired/output -w width
 ```
@@ -21,14 +45,14 @@ Currently this project support read and write of:
 
 Write only:
 - Webp
-
+- Avif
 
 ---------------------
 ### Future plan
 #### Support to be added 
 
 - Webp (Read)
-- Avif (Read/Write)
+- Avif (Read)
 
 #### Features
 
