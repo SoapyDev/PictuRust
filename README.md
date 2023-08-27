@@ -1,4 +1,4 @@
 # PictuRust
 
-## Simple image manipulator - Written in Rust
+## Image manipulator - Written in Rust
 -----------------
