@@ -59,3 +59,4 @@ Write only:
 - Cropping tool
 - Verbose
 - maybe Preview
+- Better visuals on command line
