@@ -3,6 +3,27 @@
 ## Image manipulator - Written in Rust
 -----------------
 ### Usage
+
+#### Install Nasm
+
+Fedora: 
+```
+sudo dnf install nasm
+```
+Ubuntu: 
+```
+sudo apt-get install nasm
+```
+Winget: 
+```
+winget install -e --id NASM.NASM
+```
+Homebrew: 
+```
+brew install nasm
+```
+#### Run the program
+
 ```
 cargo run --release -- -i /path/to/image -o /path/to/desired/output -w width
 ```
