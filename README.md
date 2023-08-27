@@ -1,8 +1,9 @@
 # PictuRust
 
 ## Image manipulator - Written in Rust
------------------
+
 ### Usage
+---------------------------------
 
 #### Install Nasm
 
