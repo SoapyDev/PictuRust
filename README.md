@@ -42,14 +42,14 @@ Currently this project support read and write of:
 
 Write only:
 - Webp
-
+- Avif
 
 ---------------------
 ### Future plan
 #### Support to be added 
 
 - Webp (Read)
-- Avif (Read/Write)
+- Avif (Read)
 
 #### Features
 
