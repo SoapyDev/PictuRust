@@ -7,7 +7,7 @@ pub enum Format {
     PNG,
     JPEG,
     TIFF,
-    //WEBP,
+    WEBP,
     //AVIF,
     None,
 }
@@ -18,13 +18,13 @@ impl Format {
             "png" => Self::PNG,
             "jpeg" => Self::JPEG,
             "tiff" => Self::TIFF,
-            //      "webp" => Self::WEBP,
+            "webp" => Self::WEBP,
             //      "avif" => Self::AVIF,
             _ => Self::None,
         }
     }
 
-    pub fn reformat_image(&self, img: &mut Picture) -> Result<(), ImageError> {
+    pub fn reformat_image(&self, img: &mut Picture, quality: f32) -> Result<(), ImageError> {
         if img.output_path.exists() {
             create_new_output_path(img);
         }
@@ -38,9 +38,14 @@ impl Format {
             Self::TIFF => img
                 .image
                 .save_with_format(img.output_path.to_owned(), ImageFormat::Tiff),
-            // Self::WEBP => img
-            //     .image
-            //     .save_with_format(img.output_path.to_owned(), ImageFormat::WebP),
+            Self::WEBP => {
+                let encoded_img = webp::Encoder::from_image(&img.image)
+                    .expect("Failed to create webp encoder")
+                    .encode(quality);
+                let encoded_img = encoded_img.get(0..).expect("Failed to encode webp");
+                _ = std::fs::write(img.output_path.to_owned(), encoded_img);
+                Ok(())
+            }
             // Self::AVIF => img
             //     .image
             //     .save_with_format(img.output_path.to_owned(), ImageFormat::Avif),
@@ -53,7 +58,7 @@ impl Format {
             Self::PNG => "png",
             Self::JPEG => "jpeg",
             Self::TIFF => "tiff",
-            // Self::WEBP => "webp",
+            Self::WEBP => "webp",
             // Self::AVIF => "avif",
             Self::None => "",
         }

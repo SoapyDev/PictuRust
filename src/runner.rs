@@ -20,6 +20,10 @@ fn validate_path_is_image(path: &PathBuf) -> bool {
     match path.extension() {
         Some(ext) => match ext.to_str() {
             Some("jpg") | Some("jpeg") | Some("png") | Some("tiff") => true,
+            Some("webp") | Some("avif") => {
+                println!("Cannot read {} yet.", ext.to_str().unwrap());
+                false
+            }
             _ => false,
         },
         None => false,
@@ -80,5 +84,5 @@ fn transform_image(path: &PathBuf, params: &Parameters) {
     params
         .rotation
         .rotate_image(params.flip_horizontal, params.flip_vertical, &mut img.image);
-    _ = params.format.reformat_image(&mut img);
+    _ = params.format.reformat_image(&mut img, params.quality);
 }
