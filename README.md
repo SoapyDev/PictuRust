@@ -13,12 +13,22 @@ This was mainly a pet project to learn Rust and dip a toe into multithreading, f
 It also happens to be efficient, quick and usefull.
 I hope you enjoy it!
 
+
+Currently this project support read and write of:
+- Jpeg
+- Png
+- Tiff
+
+Write only:
+- Webp
+
+
 ---------------------
 ### Future plan
 #### Support to be added 
 
-- Webp
-- Avif
+- Webp (Read)
+- Avif (Read/Write)
 
 #### Features
 
