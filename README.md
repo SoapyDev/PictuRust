@@ -56,6 +56,7 @@ Write only:
 
 #### Features
 
+- Controll over multithreading
 - Cropping tool
 - Verbose
 - maybe Preview
