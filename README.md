@@ -4,6 +4,14 @@
 
 ### Usage
 ---------------------------------
+Dowload the latest release.
+
+```
+./picturust -<flag> <value>
+``` 
+
+### Compile from source
+----------------------------------
 
 #### Install Nasm
 
