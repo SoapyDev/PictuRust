@@ -7,7 +7,7 @@
 Dowload the latest release.
 
 ```
-./picturust -<flag> <value>
+ ./picturust -<flag> <value>
 ``` 
 
 ### Compile from source
