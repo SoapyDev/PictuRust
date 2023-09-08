@@ -55,23 +55,26 @@ impl Parameters {
         println!("Version : 1.0.0");
         println!("License : MIT");
         println!(
-            "Description : This is a simple image manipulator made in Rust. 
-        It can resize, rotate, flip and convert images in bulk or one at a time."
+            "Description : This is a simple image manipulator made in Rust. It can resize, rotate, flip and convert images in bulk or one at a time."
         );
-        println!("Implementation : This program uses the clap, anyhow, image, rayon, jwalk, ravif, rgb, webp and kamadak-exif crates.");
+        println!("This program uses the clap, anyhow, image, rayon, jwalk, ravif, rgb, webp and kamadak-exif crates.");
 
         println!("\n############################ Commands ##############################\n");
 
         println!("--input_dir <i> : The directory where the images are located.");
         println!("--output_dir <o> : The directory where the images will be saved.");
-        println!("--recursive <r> : If the program should go through the subdirectories of the input directory.");
-        println!("--width <w> : The desired width of the image.");
-        println!("--height <h> : The desired height of the image.");
-        println!("--resize_type <t> : The type of resizing to be done. The options are Exact, Thumbnail and Fill.");
-        println!("--filter <f> : The filter to be used when resizing. The options are Triangle, CatmullRom, Gaussian, Nearest and Lanczos3.");
-        println!("--format <F> : The format to be used when saving the image. The options are Jpeg, Png, Tiff, Webp, Avif and None.");
-        println!("--quality <Q> : The quality of the image when converting to Webp. The options are between 1.0 and 100.00.");
-        println!("--speed <S> : The speed to be used when converting to Avif. 1 is very slow and 10 is fast. The options are between 0 and 10.");
+        println!("--recursive <R> : If the program should go through the subdirectories of the input directory.");
+        println!(
+            "--width <w> : The desired width of the image. If no specification, its calculated."
+        );
+        println!(
+            "--height <H> : The desired height of the image. If no specification, its calculated."
+        );
+        println!("--resize_type <t> : The type of resizing to be done. The options are Exact, Thumbnail and Fill. Default is Exact.");
+        println!("--filter <f> : The filter to be used when resizing. The options are Triangle, CatmullRom, Gaussian, Nearest and Lanczos3. Default is Lanczos3.");
+        println!("--format <F> : The format to be used when saving the image. The options are Jpeg, Png, Tiff, Webp, Avif and None. Default is None.");
+        println!("--quality <Q> : The quality of the image when converting to Webp. The options are between 1.0 and 100.00. Default is 70.0.");
+        println!("--speed <S> : The speed to be used when converting to Avif. The options are between 1 and 10. 1 is the slowest but smallest. Default is 7");
         println!("--rotation <r> : The rotation to be done on the image. The options are 90, 180, 270 and None.");
         println!("--flip_horizontal <s> : If the image should be flipped horizontally.");
         println!("--flip_vertical <v> : If the image should be flipped vertically.");
@@ -84,12 +87,12 @@ impl Parameters {
         if let Some(width) = self.width {
             println!("Width : {:?}", width);
         } else {
-            println!("Width : Self calculated");
+            println!("Width : Calculated");
         }
         if let Some(height) = self.height {
             println!("Height : {:?}", height);
         } else {
-            println!("Height : Self calculated");
+            println!("Height : Calculated");
         }
         println!("Resize type : {:?}", self.resize_type);
         if self.resize_type == ResizeType::Exact || self.resize_type == ResizeType::Fill {
@@ -103,8 +106,8 @@ impl Parameters {
             println!("Speed : {:?}", self.speed);
         }
         println!("Rotation : {:?}", self.rotation);
-        println!("Flip_horizontal : {:?}", self.flip_horizontal);
-        println!("Flip_vertical : {:?}", self.flip_vertical);
+        println!("Flip horizontally : {:?}", self.flip_horizontal);
+        println!("Flip vertically : {:?}", self.flip_vertical);
 
         println!("\n######################### Your Results #############################\n");
     }
