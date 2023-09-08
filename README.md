@@ -140,8 +140,8 @@ Memory: 64Gb 3600
 Resizing has a strong effect on other flags as its the first manipulation on any given request. Thus, resizing to a smaller size will result in faster times than keeping the original size. On the opposite side, resizing to a bigger size will cause other manipulation to take more time.
 
 #### Space complexity
-O(n^x)
-Space complexity is directly correlated to requested size (x). Where n is max(image size, requested size) * number of thread and x is max(image size, requested size) / image size.  
+
+Space complexity is O(n^x). Where n is (max(image area, requested area) * number of thread) and x is (max(image area, requested area) / image area).  
 
 
 
