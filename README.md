@@ -63,37 +63,31 @@ Write only:
 
 ## Looks & Performance
 
-### Looks per resizing Algo
+### Looks per resizing Algorithm
 
-|  Algo  | Size   | Results |
-|--------|--------|---------|
-|  None  | 1024x1024  | [https://github.com/SoapyDev/PictuRust/Assets/Initial.png](https://github.com/SoapyDev/PictuRust/blob/main/Assets/Initial.png)     |
-|Lanczos3|612x612   | [https://github.com/SoapyDev/PictuRust/Assets/lanczos3_small.png](https://github.com/SoapyDev/PictuRust/blob/main/Assets/lanczos3_small.png)      |
-|Lanczos3|2048x2048     | [https://github.com/SoapyDev/PictuRust/Assets/lanczos3_big.png](https://github.com/SoapyDev/PictuRust/blob/main/Assets/lanczos3_big.png)           |
-|Gaussian|612x612   | [https://github.com/SoapyDev/PictuRust/Assets/gaussian_small.png](https://github.com/SoapyDev/PictuRust/blob/main/Assets/gaussian_small.png)          |
-|Gaussian|2048x2048     | [https://github.com/SoapyDev/PictuRust/Assets/gaussian_big.png](https://github.com/SoapyDev/PictuRust/blob/main/Assets/gaussian_big.png)          |
-|CatmullRom|612x612 | [https://github.com/SoapyDev/PictuRust/Assets/catmullrom_small.png](https://github.com/SoapyDev/PictuRust/blob/main/Assets/catmullrom_small.png)          |
-|CatmullRom|2048x2048   | [https://github.com/SoapyDev/PictuRust/Assets/catmullrom_big.png](https://github.com/SoapyDev/PictuRust/blob/main/Assets/catmullrom_big.png)          |
-|Triangle|612x612   | [https://github.com/SoapyDev/PictuRust/Assets/triangle_small.png](https://github.com/SoapyDev/PictuRust/blob/main/Assets/triangle_small.png)          |
-|Triangle|2048x2048     | [https://github.com/SoapyDev/PictuRust/Assets/triangle_big.png](https://github.com/SoapyDev/PictuRust/blob/main/Assets/triangle_big.png)          |
-|Nearest|612x612    | [https://github.com/SoapyDev/PictuRust/Assets/nearest_small.png](https://github.com/SoapyDev/PictuRust/blob/main/Assets/nearest_small.png)         |
-|Nearest|2048x2048      | [https://github.com/SoapyDev/PictuRust/Assets/nearest_big.png](https://github.com/SoapyDev/PictuRust/blob/main/Assets/nearest_big.png)         |
-|Thumbnail|612x612  | [https://github.com/SoapyDev/PictuRust/Assets/thumbnail_small.png](https://github.com/SoapyDev/PictuRust/blob/main/Assets/thumbnail_small.png)          |
-|Thumbnail|2048x2048    | [https://github.com/SoapyDev/PictuRust/Assets/thumbnail_big.png](https://github.com/SoapyDev/PictuRust/blob/main/Assets/thumbnail_big.png)         |
-|Fill|612x612       | [https://github.com/SoapyDev/PictuRust/Assets/fill_small.png](https://github.com/SoapyDev/PictuRust/blob/main/Assets/fill_small.png)          |
-|Fill|2048x2048  | [https://github.com/SoapyDev/PictuRust/Assets/fill_big.png](https://github.com/SoapyDev/PictuRust/blob/main/Assets/fill_big.png)          |
+|    Algo   |                                                                                    Results                                                                                    |
+|-----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|None       | [1024x1024](https://github.com/SoapyDev/PictuRust/blob/main/Assets/Initial.png)                                                                                               |
+|Lanczos3   | [612x612](https://github.com/SoapyDev/PictuRust/blob/main/Assets/lanczos3_small.png), [2048x2048](https://github.com/SoapyDev/PictuRust/blob/main/Assets/lanczos3_big.png)    |
+|Gaussian   | [612x612](https://github.com/SoapyDev/PictuRust/blob/main/Assets/gaussian_small.png), [2048x2048](https://github.com/SoapyDev/PictuRust/blob/main/Assets/gaussian_big.png)    |
+|CatmullRom | [612x612](https://github.com/SoapyDev/PictuRust/blob/main/Assets/catmullrom_small.png), [2048x2048](https://github.com/SoapyDev/PictuRust/blob/main/Assets/catmullrom_big.png)|
+|Triangle   | [612x612](https://github.com/SoapyDev/PictuRust/blob/main/Assets/triangle_small.png), [2048x2048](https://github.com/SoapyDev/PictuRust/blob/main/Assets/triangle_big.png)    |
+|Nearest    | [612x612](https://github.com/SoapyDev/PictuRust/blob/main/Assets/nearest_small.png), [2048x2048](https://github.com/SoapyDev/PictuRust/blob/main/Assets/nearest_big.png)      |
+|Thumbnail  | [612x612](https://github.com/SoapyDev/PictuRust/blob/main/Assets/thumbnail_small.png), [2048x2048](https://github.com/SoapyDev/PictuRust/blob/main/Assets/thumbnail_big.png)  |
+|Fill       | [612x612](https://github.com/SoapyDev/PictuRust/blob/main/Assets/fill_small.png), [2048x2048](https://github.com/SoapyDev/PictuRust/blob/main/Assets/fill_big.png)            |
 
-### Weight pes conversion format
 
-|   Format  | Weight      | Ratio | Results |
-|-----------|-------------|-------|---------|
-|  PNG      |   1,357KiB  |   1   |         |
-| Jpeg      |   119KiB    | 0.088 |         |
-| Tiff      |   3,146KiB  | 4.269 |         |
-|Webp(100%) |   284KiB    | 0.209 |         |
-|Webp(70%)  |   60KiB     | 0.044 |         |
-|Avif(70%,7)|   55.6KiB   | 0.040 |         |
-|Avif(70%,3)|   53.2KiB   | 0.039 |         |
+### Weight per conversion format
+
+|                                         Results                                                     | Weight (KiB)| Ratio |
+|-----------------------------------------------------------------------------------------------------|-------------|-------|
+| [PNG](https://github.com/SoapyDev/PictuRust/blob/main/Assets/Initial.png)                           |    1,357    |   1   |
+| [JPEG](https://github.com/SoapyDev/PictuRust/blob/main/Assets/jpeg_format.jpeg)                     |      119    | 0.088 |
+| [TIFF](https://github.com/SoapyDev/PictuRust/blob/main/Assets/tiff_format.tiff)                     |    3,146    | 4.269 |
+| [WEBP lossless](https://github.com/SoapyDev/PictuRust/blob/main/Assets/webp_lossless.webp)          |      284    | 0.209 |
+| [WEBP 70% quality](https://github.com/SoapyDev/PictuRust/blob/main/Assets/webp_loss.webp)           |       60    | 0.044 |
+| [Avif 70% quality, speed 7](https://github.com/SoapyDev/PictuRust/blob/main/Assets/avif_quick.avif) |       55.6  | 0.040 |
+| [Avif 70% quality, speed 3](https://github.com/SoapyDev/PictuRust/blob/main/Assets/avif_slow.avif)  |       53.2  | 0.039 |
 
 
 ## Future plan
