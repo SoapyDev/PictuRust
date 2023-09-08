@@ -83,6 +83,18 @@ Write only:
 |Fill|612x612       | [https://github.com/SoapyDev/PictuRust/Assets/fill_small.png](https://github.com/SoapyDev/PictuRust/blob/main/Assets/fill_small.png)          |
 |Fill|2048x2048  | [https://github.com/SoapyDev/PictuRust/Assets/fill_big.png](https://github.com/SoapyDev/PictuRust/blob/main/Assets/fill_big.png)          |
 
+### Weight pes conversion format
+
+|   Format  | Weight      | Ratio | Results |
+|-----------|-------------|-------|---------|
+|  PNG      |   1,357KiB  |   1   |         |
+| Jpeg      |   119KiB    | 0.088 |         |
+| Tiff      |   3,146KiB  | 4.269 |         |
+|Webp(100%) |   284KiB    | 0.209 |         |
+|Webp(70%)  |   60KiB     | 0.044 |         |
+|Avif(70%,7)|   55.6KiB   | 0.040 |         |
+|Avif(70%,3)|   53.2KiB   | 0.039 |         |
+
 
 ## Future plan
 ### Support to be added 
