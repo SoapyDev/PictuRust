@@ -102,35 +102,44 @@ CPU: AMD Ryzen 9 5950x (32) @ 4.000GHz
 Memory: 64Gb 3600
 
 #### Samples
-|        Name      | Number of folder | Number of picture |
-|------------------|------------------|-------------------|
-|Single picture    |         0        |         1         |
-|Single folder     |         1        |      1000         |
-|Multiple folders  |        10        |      1000         |
+|        Name      | Number of folder | Number of picture | Picture per folder |    Width    |    Height    | Total Weight (MiB) |
+|------------------|------------------|-------------------|--------------------|-------------|--------------|--------------------|
+|Single picture    |         0        |         1         |            0       | 2160        | 2160         |         1.30       |
+|Single folder     |         1        |      1000         |         1000       | 1080-15,280 | 720-3024     |     1,834.42       |
+|Multiple folders  |        10        |      1000         |          100       | 1080-15,280 | 720-3024     |     1,834.42       |
 
 
 #### Tests suite
 
-|     Name      |                       Flags                     |
-|---------------|-------------------------------------------------|
-|Lanczos3       | -i -o -w 1200                                   |
-|Gaussian       | -i -o -w 1200 -f Gaussian                       |
-|Thumbnail      | -i -o -w 1200 -t Thumbnail                      |
-|Fill           | -i -o -w 1200 -t Fill                           |
-|Rotate - Flip  | -i -o -r 180 -s -v                              |
-|Convert Easy   | -i -o -F Jpeg                                   |
-|Convert Medium | -i -o -F Webp -Q 70.0                           |
-|Convert Hard   | -i -o -F Avif -S 7 -Q 70.0                      |
-|Convert Extreme| -i -o -F Avif -S 3 -Q 70.0                      |
-|Insane         | -i -o -w 1200 -r 180 -s -v -F Avif -S 1 -Q 70.0 |
+|     Name      |                   Flags                   |
+|---------------|-------------------------------------------|
+|Lanczos3       | -w 1200                                   |
+|Gaussian       | -w 1200 -f Gaussian                       |
+|Thumbnail      | -w 1200 -t Thumbnail                      |
+|Fill           | -w 1200 -t Fill                           |
+|Rotate - Flip  | -r 180 -s -v                              |
+|Convert Easy   | -F Jpeg                                   |
+|Convert Medium | -F Webp -Q 70.0                           |
+|Convert Hard   | -F Avif -S 7 -Q 70.0                      |
+|Convert Extreme| -F Avif -S 3 -Q 70.0                      |
+|Insane         | -w 1200 -r 180 -s -v -F Avif -S 1 -Q 70.0 |
 
 
 #### Results
 |     Sample     | Lanczos3 (ms) | Gaussian (ms) | Thumbnail (ms) | Fill (ms) | Rotate - Flip (ms) | Convert Easy (ms) | Convert Medium (ms) | Convert Hard (ms) | Convert Extreme (ms) | Insane (ms) | 
 |----------------|---------------|---------------|----------------|-----------|--------------------|-------------------|---------------------|-------------------|----------------------|-------------|
-|Single picture  |---------------|---------------|----------------|-----------|--------------------|-------------------|---------------------|-------------------|----------------------|-------------|
-|Single folder   |---------------|---------------|----------------|-----------|--------------------|-------------------|---------------------|-------------------|----------------------|-------------|
-|Multiple folders|---------------|---------------|----------------|-----------|--------------------|-------------------|---------------------|-------------------|----------------------|-------------|
+|Single picture  |      204      |      197      |       94       |    115    |         167        |        151        |         317         |       1,119       |         2,754        |    10,169   |
+|Single folder   |   15,251      |   15,296      |    7,984       |  9,841    |      14,908        |     11,218        |      20,786         |     408,913       |       488,417        |   712,587   |
+|Multiple folders|   15,148      |   14,894      |    7,717       |  9,631    |      14,636        |     10,886        |      20,448         |     408,342       |       487,578        |   709,588   |
+|Avg Time per MiB|        8.33   |        8.27   |        4.30    |      5.33 |           8.09     |          6.06     |          11.32      |         222,98    |           266.67     |       390.27|
+
+
+#### Compound effect
+Resizing has a strong effect on other flags as its the first manipulation on any given request. Thus, resizing to a smaller size will result in faster times than keeping the original size. On the opposite side, resizing to a bigger size will cause other flags to take more time.
+
+#### Space complexity
+O(n^x)
+Space complexity is directly correlated to requested size (x). Where n is the number of images simultaneously treated and x is max(image size, requested size) / image size.  
 
 
 
