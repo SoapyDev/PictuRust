@@ -141,7 +141,7 @@ Resizing has a strong effect on other flags as its the first manipulation on any
 
 #### Space complexity
 O(n^x)
-Space complexity is directly correlated to requested size (x). Where n is the number of images simultaneously treated and x is max(image size, requested size) / image size.  
+Space complexity is directly correlated to requested size (x). Where n is max(image size, requested size) * number of thread and x is max(image size, requested size) / image size.  
 
 
 
