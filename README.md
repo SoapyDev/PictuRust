@@ -1,19 +1,22 @@
 # PictuRust
 
-## Image manipulator - Written in Rust
+Image manipulator made in Rust.
 
-### Usage
----------------------------------
-Dowload the latest release.
+## Usage
+Dowload the latest release and run.
 
 ```
  ./picturust -<flag> <value>
 ``` 
 
-### Compile from source
-----------------------------------
 
-#### Install Nasm
+
+
+## Compile from source
+
+This project require Nasm.
+
+### Install Nasm
 
 Fedora: 
 ```
@@ -26,20 +29,21 @@ winget install -e --id NASM.NASM
 NASM will not go into your path by itself. To do so, you can follow this tutorial
 https://labs.bilimedtech.com/nasm/windows-install/2.html#download-netwide-assembler-nasm
 
-
 Homebrew: 
 ```
 brew install nasm
 ```
---------------------
 
-#### Build from source
+### Build from source
 
 ```
-cargo run --release -- -i /path/to/image -o /path/to/desired/output -w width
+cargo run --release -- -i /path/to/image -o /path/to/desired/output -<Flag> <Value>
 ```
--------------------
-### About this project
+
+
+
+
+## About this project
 
 This was mainly a pet project to learn Rust and dip a toe into multithreading, file manipulation and CLI tools. 
 It also happens to be efficient, quick and usefull.
@@ -55,14 +59,41 @@ Write only:
 - Webp
 - Avif
 
----------------------
-### Future plan
-#### Support to be added 
+
+
+## Looks & Performance
+
+### Looks per resizing Algo
+Inital : 1024x1024
+
+Small : 612x612
+Big : 2048x2048
+|  Algo  | Size | Results |
+|--------|------|---------|
+|  None  | Init |         |
+|Lanczos3|Small |         |
+|Lanczos3|Big   |         |
+|Gaussian|Small |         |
+|Gaussian|Big   |         |
+|CatmullRom|Small |         |
+|CatmullRom|Big   |         |
+|Triangle|Small |         |
+|Triangle|Big   |         |
+|Nearest|Small |         |
+|Nearest|Big   |         |
+|Thumbnail|Small |         |
+|Thumbnail|Big   |         |
+|Fill|Small |         |
+|Fill|Big   |         |
+
+
+## Future plan
+### Support to be added 
 
 - Webp (Read)
 - Avif (Read)
 
-#### Features
+### Features
 
 - Controll over multithreading
 - Cropping tool
