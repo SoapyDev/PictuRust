@@ -1,15 +1,19 @@
 # PictuRust
 
-Image manipulator made in Rust.
+Image manipulator made with Rust. 
+
+Single picture or folders full of them, gain the ability to resize, convert, rotate or flip them from the command line. 
 
 ## Usage
 Dowload the latest release and run.
 
 ```
  ./picturust -<flag> <value>
-``` 
-
-
+```
+For help
+```
+./picturust -h
+```
 
 
 ## Compile from source
@@ -37,10 +41,8 @@ brew install nasm
 ### Build from source
 
 ```
-cargo run --release -- -i /path/to/image -o /path/to/desired/output -<Flag> <Value>
+cargo build --release
 ```
-
-
 
 
 ## About this project
@@ -93,7 +95,7 @@ Write only:
 ### Performance
 
 #### Software & Material 
-The results will depend largely on the machine and the os. For comparaison here are the specs used for this test suite.
+The results will depend largely on the machine and the OS. For comparaison here are the specs used for this test suite.
 
 OS: Fedora 38 - 6.4.14-200.fc38.x86_64
 
@@ -135,7 +137,7 @@ Memory: 64Gb 3600
 
 
 #### Compound effect
-Resizing has a strong effect on other flags as its the first manipulation on any given request. Thus, resizing to a smaller size will result in faster times than keeping the original size. On the opposite side, resizing to a bigger size will cause other flags to take more time.
+Resizing has a strong effect on other flags as its the first manipulation on any given request. Thus, resizing to a smaller size will result in faster times than keeping the original size. On the opposite side, resizing to a bigger size will cause other manipulation to take more time.
 
 #### Space complexity
 O(n^x)
