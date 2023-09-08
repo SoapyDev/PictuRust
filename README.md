@@ -141,7 +141,7 @@ Resizing has a strong effect on other flags as its the first manipulation on any
 
 #### Space complexity
 
-Space complexity is O(n^x). Where n is (max(image area, requested area) * number of thread) and x is (max(image area, requested area) / image area).  
+Space complexity is O(n^x). Where n is the number of simultaneously treated image and x is the max(image area, requested area) / image area.  
 
 
 
