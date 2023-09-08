@@ -90,6 +90,50 @@ Write only:
 | [Avif 70% quality, speed 3](https://github.com/SoapyDev/PictuRust/blob/main/Assets/avif_slow.avif)  |       53.2  | 0.039 |
 
 
+### Performance
+
+#### Software & Material 
+The results will depend largely on the machine and the os. For comparaison here are the specs used for this test suite.
+
+OS: Fedora 38 - 6.4.14-200.fc38.x86_64
+
+CPU: AMD Ryzen 9 5950x (32) @ 4.000GHz
+
+Memory: 64Gb 3600
+
+#### Samples
+|        Name      | Number of folder | Number of picture |
+|------------------|------------------|-------------------|
+|Single picture    |         0        |         1         |
+|Single folder     |         1        |      1000         |
+|Multiple folders  |        10        |      1000         |
+
+
+#### Tests suite
+
+|     Name      |                       Flags                     |
+|---------------|-------------------------------------------------|
+|Lanczos3       | -i -o -w 1200                                   |
+|Gaussian       | -i -o -w 1200 -f Gaussian                       |
+|Thumbnail      | -i -o -w 1200 -t Thumbnail                      |
+|Fill           | -i -o -w 1200 -t Fill                           |
+|Rotate - Flip  | -i -o -r 180 -s -v                              |
+|Convert Easy   | -i -o -F Jpeg                                   |
+|Convert Medium | -i -o -F Webp -Q 70.0                           |
+|Convert Hard   | -i -o -F Avif -S 7 -Q 70.0                      |
+|Convert Extreme| -i -o -F Avif -S 3 -Q 70.0                      |
+|Insane         | -i -o -w 1200 -r 180 -s -v -F Avif -S 1 -Q 70.0 |
+
+
+#### Results
+|     Sample     | Lanczos3 (ms) | Gaussian (ms) | Thumbnail (ms) | Fill (ms) | Rotate - Flip (ms) | Convert Easy (ms) | Convert Medium (ms) | Convert Hard (ms) | Convert Extreme (ms) | Insane (ms) | 
+|----------------|---------------|---------------|----------------|-----------|--------------------|-------------------|---------------------|-------------------|----------------------|-------------|
+|Single picture  |---------------|---------------|----------------|-----------|--------------------|-------------------|---------------------|-------------------|----------------------|-------------|
+|Single folder   |---------------|---------------|----------------|-----------|--------------------|-------------------|---------------------|-------------------|----------------------|-------------|
+|Multiple folders|---------------|---------------|----------------|-----------|--------------------|-------------------|---------------------|-------------------|----------------------|-------------|
+
+
+
 ## Future plan
 ### Support to be added 
 
