@@ -1,8 +1,7 @@
-use std::{fs::File, io::BufReader, path::PathBuf};
-
+use crate::parameters::{format::Format, parameters::Parameters, rotation};
+use exif::{Exif, In, Tag};
 use image::{io::Reader, DynamicImage, GenericImageView, ImageFormat};
-
-use crate::parameters::format::Format;
+use std::{fs::File, io::BufReader, path::PathBuf};
 
 pub struct Picture {
     pub format: ImageFormat,
@@ -12,76 +11,80 @@ pub struct Picture {
 }
 
 impl Picture {
-    pub fn new(source: &PathBuf, output_path: &PathBuf, format: &Format) -> Self {
-        let reader = Reader::open(source).expect("Failed to open image");
-        let mut img = Self {
-            output_path: create_output_path(&source, &output_path, format),
-            format: get_format(&reader),
-            image: get_image(reader),
-            dimensions: (0, 0),
-        };
-        set_initial_rotation(get_rotation_code(source), &mut img);
-        img.dimensions = img.image.dimensions();
-        img
+    pub fn new(source: &PathBuf, params: &Parameters) -> Self {
+        let mut picture = create_picture(source, params);
+        rotation::set_initial_rotation(get_rotation_code(source), &mut picture);
+        set_img_dimensions(&mut picture);
+        picture
     }
 }
 
-fn create_output_path(source: &PathBuf, output: &PathBuf, format: &Format) -> PathBuf {
-    match format {
-        Format::None => output.join(source.file_name().unwrap()),
-        _ => output.join(get_output_name(source, format)),
+fn create_picture(source: &PathBuf, params: &Parameters) -> Picture {
+    let reader = create_img_reader(source);
+    Picture {
+        output_path: create_output_path(source, params),
+        format: get_format(&reader),
+        image: get_image(reader, &source),
+        dimensions: (0, 0),
     }
 }
 
-fn get_format(reader: &Reader<BufReader<File>>) -> ImageFormat {
-    reader.format().unwrap_or(ImageFormat::Jpeg)
+fn create_img_reader(source: &PathBuf) -> Reader<BufReader<File>> {
+    Reader::open(source).expect("Failed to open File")
 }
 
-fn get_image(reader: Reader<BufReader<File>>) -> DynamicImage {
-    if let Ok(img) = reader.decode() {
-        return img;
-    } else {
-        return DynamicImage::new_rgb8(1, 1);
+fn create_output_path(source: &PathBuf, params: &Parameters) -> PathBuf {
+    match params.format {
+        Format::None => params.output_dir.join(source.file_name().unwrap()),
+        _ => params
+            .output_dir
+            .join(get_output_name(source, &params.format)),
     }
 }
+
 fn get_output_name(source: &PathBuf, format: &Format) -> PathBuf {
     let mut output_name = source.file_stem().unwrap().to_os_string();
     output_name.push(".");
     output_name.push(format.to_string());
     PathBuf::from(output_name)
 }
+
+fn get_format(reader: &Reader<BufReader<File>>) -> ImageFormat {
+    reader.format().unwrap_or(ImageFormat::Jpeg)
+}
+
+fn get_image(reader: Reader<BufReader<File>>, img_path: &PathBuf) -> DynamicImage {
+    match reader.decode() {
+        Ok(img) => img,
+        Err(_) => {
+            println!("Could not decode image: {}", img_path.display());
+            DynamicImage::new_rgb8(0, 0)
+        }
+    }
+}
+
 fn get_rotation_code(path: &PathBuf) -> Option<u32> {
     let file = std::fs::File::open(path).expect("Could not open file");
     let mut bufreader = BufReader::new(file);
     let exifreader = exif::Reader::new();
-    let exif = exifreader.read_from_container(&mut bufreader);
+    if let Ok(exif) = exifreader.read_from_container(&mut bufreader) {
+        return read_exif(exif);
+    }
+    None
+}
 
-    match exif {
-        Ok(exif) => {
-            let orientation = exif.get_field(exif::Tag::Orientation, exif::In::PRIMARY);
-            match orientation {
-                Some(orientation) => {
-                    let code = orientation.value.get_uint(0).unwrap();
-                    Some(code)
-                }
-                None => None,
-            }
+fn read_exif(exif: Exif) -> Option<u32> {
+    let orientation = exif.get_field(Tag::Orientation, In::PRIMARY);
+    match orientation {
+        Some(orientation) => {
+            let orientation = orientation.value.get_uint(0).unwrap();
+            Some(orientation)
         }
-        Err(_) => None,
+        None => None,
     }
 }
 
-fn set_initial_rotation(code: Option<u32>, picture: &mut Picture) {
-    match code {
-        Some(6) => {
-            picture.image = picture.image.rotate90();
-        }
-        Some(3) => {
-            picture.image = picture.image.rotate180();
-        }
-        Some(8) => {
-            picture.image = picture.image.rotate270();
-        }
-        _ => {}
-    }
+fn set_img_dimensions(picture: &mut Picture) {
+    let (width, height) = picture.image.dimensions();
+    picture.dimensions = (width, height);
 }
