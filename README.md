@@ -154,5 +154,20 @@ Most gain can be achieved by converting to webp or avif. Playing with the speed 
 - Controll over multithreading
 - Cropping tool
 - Verbose
-- maybe Preview
-- Better visuals on command line
+
+## Flags
+
+|   Name            |      Long        |   Short   |   Defaults   |             Options                              |                                                     Descripton                                                    |
+|-------------------|------------------|-----------|--------------|--------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|
+|Input              |--input_dir       |-i         |No default    |No options                                        |Directory, or file used as the source                                                                              |
+|Output             |--outpub_dir      |-o         |No default    |No options                                        |Directory used as the target for the program                                                                       |
+|Recursive          |--recursive       |-R         |False         |No options                                        |Allow the program to go into any subfolder to search for more picture                                              |
+|Width              |--width           |-w         |Calculated    |No options                                        |The width in pixel to resize the image to. If none is given, it will keep the ratio                                |
+|Height             |--height          |-H         |Calculated    |No options                                        |The height in pixel to resize the image to. If none is given, it will keep the ratio                               |
+|Resizing           |--resize_type     |-t         |Exact         |Eact, Thumbnail, Fill                             |Define the method used to resize the picture                                                                       |
+|Filter             |--filter          |-f         |Lanczos3      |Lanczos3, Gaussian, CatmullRom, Triangle, Nearest |The height in pixel to resize the picture to. If none is given, it will keep the ratio                             |
+|Format             |--format          |-F         |None          |None, Jpeg, Png, Tiff, Webp, Avif                 |The format of the new picture. None set it to the actual format of the picture                                     |
+|Rotation           |--rotation        |-r         |None          |None, 90, 180, 270                                |The rotation to be applied to the picture. None set it to the actual rotation                                      |
+|Flip Horinzontally |--flip_horizontal |-s         |False         |No options                                        |If the picture should be flipped on the X axis                                                                     |
+|Flip Vertically    |--flip_vertical   |-v         |False         |No options                                        |If the picture should be flipped on the Y axis                                                                     |
+|Print              |--print           |-p         |False         |Sixel, Kitty, Iterm, Blocks                       |Indicate to the program if it should display the result image in the terminal when its saved                       |

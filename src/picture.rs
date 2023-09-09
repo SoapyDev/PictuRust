@@ -58,7 +58,7 @@ fn get_image(reader: Reader<BufReader<File>>, img_path: &PathBuf) -> DynamicImag
         Ok(img) => img,
         Err(_) => {
             println!("Could not decode image: {}", img_path.display());
-            DynamicImage::new_rgb8(0, 0)
+            DynamicImage::new_rgb8(1, 1)
         }
     }
 }
