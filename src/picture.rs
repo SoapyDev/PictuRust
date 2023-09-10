@@ -64,7 +64,7 @@ fn get_image(reader: Reader<BufReader<File>>, img_path: &PathBuf) -> DynamicImag
 }
 
 fn get_rotation_code(path: &PathBuf) -> Option<u32> {
-    let file = std::fs::File::open(path).expect("Could not open file");
+    let file = File::open(path).expect("Could not open file");
     let mut bufreader = BufReader::new(file);
     let exifreader = exif::Reader::new();
     if let Ok(exif) = exifreader.read_from_container(&mut bufreader) {

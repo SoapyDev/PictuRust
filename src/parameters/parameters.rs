@@ -6,7 +6,7 @@ use resizetype::ResizeType;
 use rotation::Rotation;
 use std::{ops::RangeInclusive, path::PathBuf};
 
-use super::{display, format, resizetype, rotation, view};
+use super::{display, format, resizetype, rotation};
 
 #[derive(Parser)]
 #[command(
@@ -42,8 +42,6 @@ pub struct Parameters {
     pub flip_horizontal: bool,
     #[arg(short = 'v', long, default_value = "false", required = false)]
     pub flip_vertical: bool,
-    #[arg(short, long, value_parser=get_protocol, required = false)]
-    pub print: Option<pic::support::Protocol>,
 }
 
 impl Parameters {
@@ -58,24 +56,24 @@ impl Parameters {
     }
 }
 
-fn get_filter(s: &str) -> Result<imageops::FilterType, anyhow::Error> {
+fn get_filter(s: &str) -> Result<imageops::FilterType, Error> {
     Ok(ResizeType::new_filter(s))
 }
 
-fn get_type(s: &str) -> Result<ResizeType, anyhow::Error> {
+fn get_type(s: &str) -> Result<ResizeType, Error> {
     Ok(ResizeType::new(s))
 }
 
-fn get_format(s: &str) -> Result<Format, anyhow::Error> {
+fn get_format(s: &str) -> Result<Format, Error> {
     Ok(Format::new(s))
 }
 
-fn get_rotation(s: &str) -> Result<Rotation, anyhow::Error> {
+fn get_rotation(s: &str) -> Result<Rotation, Error> {
     Ok(Rotation::new(s))
 }
 
 const EFFORT_RANGE: RangeInclusive<u8> = 1..=10;
-fn get_effort(s: &str) -> Result<u8, anyhow::Error> {
+fn get_effort(s: &str) -> Result<u8, Error> {
     let effort = s.parse::<u8>().expect("Effort is not between 1 and 10");
     match EFFORT_RANGE.contains(&effort) {
         true => Ok(effort),
@@ -90,8 +88,4 @@ fn quality_in_range(s: &str) -> Result<f32, String> {
         true => Ok(quality),
         false => Err("Quality is not a between 1.0 and 100.0".to_string()),
     }
-}
-
-fn get_protocol(s: &str) -> Result<pic::support::Protocol, anyhow::Error> {
-    Ok(view::new(s))
 }

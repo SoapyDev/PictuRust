@@ -2,7 +2,7 @@ use crate::parameters::{format::Format, resizetype::ResizeType};
 
 use super::parameters::Parameters;
 
-const TEXT: [&str; 22] = [
+const TEXT: [&str; 21] = [
     "############################# About ################################\n",
     "Made by SoapyDev",
     "Version : 1.0.0",
@@ -23,7 +23,6 @@ const TEXT: [&str; 22] = [
     "--rotation <r> : The rotation to be done on the image. The options are 90, 180, 270 and None.",
     "--flip_horizontal <s> : If the image should be flipped horizontally.",
     "--flip_vertical <v> : If the image should be flipped vertically.",
-    "--print <p> : The image will be displayed in terminal after the transformation. Options are Sixel, Kitty, Iterm and Blocks.",
     "\n######################### Your Commands ############################\n",
 ];
 
@@ -32,7 +31,7 @@ pub fn display_user_text(param: &Parameters) {
     display_options(param);
 }
 
-fn display_text(lines: [&str; 22]) {
+fn display_text(lines: [&str; 21]) {
     for text in lines.iter() {
         println!("{}", text);
     }
@@ -52,7 +51,6 @@ fn display_options(param: &Parameters) {
     options.push(format!("Rotation : {:?}", param.rotation));
     options.push(format!("Flip horizontally : {:?}", param.flip_horizontal));
     options.push(format!("Flip vertically : {:?}", param.flip_vertical));
-    get_print_value(param, &mut options);
     options.push(format!(
         "\n######################### Your Results #############################\n"
     ));
@@ -88,9 +86,4 @@ fn get_conversion_param(params: &Parameters, options: &mut Vec<String>) {
     };
 }
 
-fn get_print_value(params: &Parameters, options: &mut Vec<String>) {
-    match params.print {
-        Some(p) => options.push(format!("Print : {:?}", p.to_string())),
-        None => options.push("Print : None".to_string()),
-    };
-}
+
