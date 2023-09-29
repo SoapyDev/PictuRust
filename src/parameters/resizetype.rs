@@ -76,3 +76,88 @@ fn calculate_dimensions(params: &Parameters, dimensions: (u32, u32)) -> (u32, u3
         (Some(w), Some(h)) => (w, h),
     }
 }
+
+#[cfg(test)]
+mod test {
+    use image::imageops::FilterType;
+
+    use crate::parameters::resizetype::ResizeType;
+
+    #[test]
+    fn new_resize_exact() {
+        let resize_type = ResizeType::new("Exact");
+        assert_eq!(resize_type, ResizeType::Exact);
+    }
+    #[test]
+    fn new_resize_thumbnail() {
+        let resize_type = ResizeType::new("Thumbnail");
+        assert_eq!(resize_type, ResizeType::Thumbnail);
+    }
+    #[test]
+    fn new_resize_fill() {
+        let resize_type = ResizeType::new("Fill");
+        assert_eq!(resize_type, ResizeType::Fill);
+    }
+    #[test]
+    fn new_resize_none() {
+        let resize_type = ResizeType::new("None");
+        assert_eq!(resize_type, ResizeType::None);
+    }
+    #[test]
+    fn new_filter_triangle() {
+        let filter = ResizeType::new_filter("Triangle");
+        assert_eq!(filter, FilterType::Triangle);
+    }
+    #[test]
+    fn new_filter_catmullrom() {
+        let filter = ResizeType::new_filter("CatmullRom");
+        assert_eq!(filter, FilterType::CatmullRom);
+    }
+    #[test]
+    fn new_filter_gaussian() {
+        let filter = ResizeType::new_filter("Gaussian");
+        assert_eq!(filter, FilterType::Gaussian);
+    }
+    #[test]
+    fn new_filter_nearest() {
+        let filter = ResizeType::new_filter("Nearest");
+        assert_eq!(filter, FilterType::Nearest);
+    }
+    #[test]
+    fn new_filter_lanczos3() {
+        let filter = ResizeType::new_filter("Lanczos3");
+        assert_eq!(filter, FilterType::Lanczos3);
+    }
+    #[test]
+    fn new_filter_none() {
+        let filter = ResizeType::new_filter("None");
+        assert_eq!(filter, FilterType::Lanczos3);
+    }
+    #[test]
+    fn calculate_dimensions() {
+        let mut params = super::Parameters::new();
+        params.width = Some(100);
+        params.height = Some(100);
+        let dimensions = super::calculate_dimensions(&params, (100, 100));
+        assert_eq!(dimensions, (100, 100));
+    }
+    #[test]
+    fn calculate_dimensions_ratio() {
+        let mut params = super::Parameters::new();
+        params.width = Some(100);
+        let dimensions = super::calculate_dimensions_ratio(&params, (100, 100));
+        assert_eq!(dimensions, (100, 100));
+    }
+    #[test]
+    fn calculate_dimensions_ratio_no_params() {
+        let params = super::Parameters::new();
+        let dimensions = super::calculate_dimensions_ratio(&params, (100, 100));
+        assert_eq!(dimensions, (100, 100));
+    }
+    #[test]
+    fn calculate_dimensions_ratio_no_dimensions() {
+        let params = super::Parameters::new();
+        let dimensions = super::calculate_dimensions_ratio(&params, (0, 0));
+        assert_eq!(dimensions, (0, 0));
+    }
+}

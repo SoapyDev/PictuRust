@@ -1,8 +1,8 @@
 use crate::parameters::parameters::Parameters;
 
-mod parameters;
-mod picture;
-mod runner;
+pub mod parameters;
+pub mod picture;
+pub mod runner;
 
 fn main() {
     let params = Parameters::new_with_display();

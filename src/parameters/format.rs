@@ -1,10 +1,8 @@
+use super::parameters::Parameters;
+use crate::picture::Picture;
 use image::{ImageError, ImageFormat};
 use ravif::*;
 use rgb::*;
-
-use crate::picture::Picture;
-
-use super::parameters::Parameters;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Format {
@@ -117,4 +115,49 @@ fn to_raw_rgba8(img: &mut Picture) -> Vec<u8> {
 
 fn save_image_with_special_format(img: &mut Picture, encoded_img: &[u8]) {
     _ = std::fs::write(img.output_path.to_owned(), encoded_img);
+}
+
+#[cfg(test)]
+mod test {
+    #[test]
+    fn format_png() {
+        let format = super::Format::new("png");
+        assert_eq!(format, super::Format::PNG);
+    }
+    #[test]
+    fn format_jpeg() {
+        let format = super::Format::new("jpeg");
+        assert_eq!(format, super::Format::JPEG);
+    }
+    #[test]
+    fn format_tiff() {
+        let format = super::Format::new("tiff");
+        assert_eq!(format, super::Format::TIFF);
+    }
+    #[test]
+    fn format_webp() {
+        let format = super::Format::new("webp");
+        assert_eq!(format, super::Format::WEBP);
+    }
+    #[test]
+    fn format_avif() {
+        let format = super::Format::new("avif");
+        assert_eq!(format, super::Format::AVIF);
+    }
+    #[test]
+    fn format_none() {
+        let format = super::Format::new("none");
+        assert_eq!(format, super::Format::None);
+    }
+    #[test]
+    fn format_empty() {
+        let format = super::Format::new("");
+        assert_eq!(format, super::Format::None);
+    }
+
+    #[test]
+    fn format_to_string_png() {
+        let format = super::Format::PNG;
+        assert_eq!(format.to_string(), "png");
+    }
 }

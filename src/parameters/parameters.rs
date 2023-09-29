@@ -42,15 +42,33 @@ pub struct Parameters {
     pub flip_horizontal: bool,
     #[arg(short = 'v', long, default_value = "false", required = false)]
     pub flip_vertical: bool,
+    #[arg(short = 'm', long, default_value = "true", required = false)]
+    pub keep_metadata: bool,
 }
 
 impl Parameters {
+    #[allow(dead_code)]
     pub fn new() -> Self {
-        Self::parse()
+        Parameters {
+            input_dir: PathBuf::new(),
+            recursive: false,
+            output_dir: PathBuf::from("."),
+            width: None,
+            height: None,
+            resize_type: ResizeType::Exact,
+            filter: imageops::FilterType::Lanczos3,
+            format: Format::None,
+            quality: 75.0,
+            speed: 7,
+            rotation: Rotation::None,
+            flip_horizontal: false,
+            flip_vertical: false,
+            keep_metadata: true,
+        }
     }
 
     pub fn new_with_display() -> Self {
-        let param = Self::new();
+        let param = Self::parse();
         display::display_user_text(&param);
         param
     }
@@ -87,5 +105,89 @@ fn quality_in_range(s: &str) -> Result<f32, String> {
     match QUALITY_RANGE.contains(&quality) {
         true => Ok(quality),
         false => Err("Quality is not a between 1.0 and 100.0".to_string()),
+    }
+}
+
+#[cfg(test)]
+mod test {
+    #[test]
+    fn test_get_effort() {
+        let effort = super::get_effort("1").unwrap();
+        assert_eq!(effort, 1);
+    }
+    #[test]
+    fn test_get_effort_err() {
+        let effort = super::get_effort("11");
+        assert!(effort.is_err());
+    }
+    #[test]
+    fn test_get_quality() {
+        let quality = super::quality_in_range("1.0").unwrap();
+        assert_eq!(quality, 1.0);
+    }
+    #[test]
+    fn test_get_quality_err() {
+        let quality = super::quality_in_range("101.0");
+        assert!(quality.is_err());
+    }
+    #[test]
+    fn test_get_filter() {
+        let filter = super::get_filter("Lanczos3").unwrap();
+        assert_eq!(filter, image::imageops::FilterType::Lanczos3);
+    }
+    #[test]
+    fn test_get_default_filter() {
+        let filter = super::get_filter("Lanczos").unwrap();
+        assert_eq!(filter, image::imageops::FilterType::Lanczos3);
+    }
+    #[test]
+    fn test_get_type_exact() {
+        let filter = super::get_type("Exact").unwrap();
+        assert_eq!(filter, super::ResizeType::Exact);
+    }
+    #[test]
+    fn test_get_type_fill() {
+        let filter = super::get_type("Fill").unwrap();
+        assert_eq!(filter, super::ResizeType::Fill);
+    }
+    #[test]
+    fn test_get_type_default() {
+        let filter = super::get_type("Exact").unwrap();
+        assert_eq!(filter, super::ResizeType::Exact);
+    }
+    #[test]
+    fn test_get_format_webp() {
+        let filter = super::get_format("Webp").unwrap();
+        assert_eq!(filter, super::Format::WEBP);
+    }
+    #[test]
+    fn test_get_format_avif() {
+        let filter = super::get_format("Avif").unwrap();
+        assert_eq!(filter, super::Format::AVIF);
+    }
+    #[test]
+    fn test_get_format_default() {
+        let filter = super::get_format("None").unwrap();
+        assert_eq!(filter, super::Format::None);
+    }
+    #[test]
+    fn test_get_rotation_90() {
+        let filter = super::get_rotation("90").unwrap();
+        assert_eq!(filter, super::Rotation::Rotate90);
+    }
+    #[test]
+    fn test_get_rotation_180() {
+        let filter = super::get_rotation("180").unwrap();
+        assert_eq!(filter, super::Rotation::Rotate180);
+    }
+    #[test]
+    fn test_get_rotation_270() {
+        let filter = super::get_rotation("270").unwrap();
+        assert_eq!(filter, super::Rotation::Rotate270);
+    }
+    #[test]
+    fn test_get_rotation_none() {
+        let filter = super::get_rotation("").unwrap();
+        assert_eq!(filter, super::Rotation::None);
     }
 }

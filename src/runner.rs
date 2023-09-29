@@ -3,7 +3,7 @@ use rayon::prelude::*;
 use std::{fs::create_dir_all, path::PathBuf};
 
 use crate::{
-    parameters::{parameters::Parameters},
+    parameters::{metadata::Metadata, parameters::Parameters},
     picture::Picture,
 };
 
@@ -82,4 +82,5 @@ fn transform_image(path: &PathBuf, params: &Parameters) {
     params.resize_type.alter_img(params, &mut img);
     params.rotation.alter_img(params, &mut img.image);
     params.format.save_img(&mut img, params);
+    Metadata::copy_metadata(params, &img);
 }
