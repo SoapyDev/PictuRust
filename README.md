@@ -56,8 +56,6 @@ Currently this project support read and write of:
 - Jpeg
 - Png
 - Tiff
-
-Write only:
 - Webp
 - Avif
 
@@ -144,10 +142,6 @@ Most gain can be achieved by converting to webp or avif. Playing with the speed 
 
 
 ## Future plan
-### Support to be added 
-
-- Webp (Read)
-- Avif (Read)
 
 ### Features
 
