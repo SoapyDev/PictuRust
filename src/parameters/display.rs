@@ -8,7 +8,7 @@ const TEXT: [&str; 21] = [
     "Version : 1.0.0",
     "License : MIT",
     "Description : This is a simple image manipulator made in Rust. It can resize, rotate, flip and convert images in bulk or one at a time.",
-    "This program uses the clap, pic, anyhow, image, rayon, jwalk, ravif, rgb, webp and kamadak-exif crates.",
+    "This program uses the clap, anyhow, image, rayon, jwalk, and kamadak-exif crates.",
     "\n############################ Commands ##############################\n",
     "--input_dir <i> : The directory where the images are located.",
     "--output_dir <o> : The directory where the images will be saved.",
@@ -18,7 +18,7 @@ const TEXT: [&str; 21] = [
     "--resize_type <t> : The type of resizing to be done. The options are Exact, Thumbnail and Fill. Default is Exact.",
     "--filter <f> : The filter to be used when resizing. The options are Triangle, CatmullRom, Gaussian, Nearest and Lanczos3. Default is Lanczos3.",
     "--format <F> : The format to be used when saving the image. The options are Jpeg, Png, Tiff, Webp, Avif and None. Default is None.",
-    "--quality <Q> : The quality of the image when converting to Webp. The options are between 1.0 and 100.00. Default is 70.0.",
+    "--quality <Q> : The quality of the image when converting to Webp. The options are between 1.0 and 100.00. Default is 75.0.",
     "--speed <S> : The speed to be used when converting to Avif. The options are between 1 and 10. 1 is the slowest but smallest. Default is 7",
     "--rotation <r> : The rotation to be done on the image. The options are 90, 180, 270 and None.",
     "--flip_horizontal <s> : If the image should be flipped horizontally.",
@@ -51,9 +51,7 @@ fn display_options(param: &Parameters) {
     options.push(format!("Rotation : {:?}", param.rotation));
     options.push(format!("Flip horizontally : {:?}", param.flip_horizontal));
     options.push(format!("Flip vertically : {:?}", param.flip_vertical));
-    options.push(format!(
-        "\n######################### Your Results #############################\n"
-    ));
+    options.push("\n######################### Your Results #############################\n".to_string());
     for text in options.iter() {
         println!("{}", text);
     }
@@ -77,8 +75,8 @@ fn get_filter(params: &Parameters, options: &mut Vec<String>) {
 
 fn get_conversion_param(params: &Parameters, options: &mut Vec<String>) {
     match params.format {
-        Format::WEBP => options.push(format!("Quality : {:?}", params.quality)),
-        Format::AVIF => {
+        Format::Webp => options.push(format!("Quality : {:?}", params.quality)),
+        Format::Avif => {
             options.push(format!("Quality : {:?}", params.quality));
             options.push(format!("Speed : {:?}", params.speed));
         }

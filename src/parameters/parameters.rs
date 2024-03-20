@@ -10,7 +10,7 @@ use super::{display, format, resizetype, rotation};
 
 #[derive(Parser)]
 #[command(
-    author,
+    author = "SoapyDev",
     version,
     about,
     long_about = "This is a simple image manipulator made in Rust. It can resize, rotate, flip and convert images in bulk or one at a time."
@@ -22,7 +22,7 @@ pub struct Parameters {
     pub recursive: bool,
     #[arg(short, long, required = true)]
     pub output_dir: PathBuf,
-    #[arg(short, long, default_value = Option::None, required = false)]
+    #[arg(short='W', long, default_value = Option::None, required = false)]
     pub width: Option<u32>,
     #[arg(short='H', long, default_value = Option::None ,required = false)]
     pub height: Option<u32>,

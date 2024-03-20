@@ -62,8 +62,8 @@ fn calculate_dimensions_ratio(params: &Parameters, dimensions: (u32, u32)) -> (u
     match (params.width, params.height, dimensions.0, dimensions.1) {
         (_, _, 0, 0) => (0, 0),
         (None, None, _, _) => dimensions,
-        (None, Some(h), _, _) => ((dimensions.0 * h / dimensions.1), h),
-        (Some(w), None, _, _) => (w, (dimensions.1 * w / dimensions.0)),
+        (None, Some(h), _, _) => (dimensions.0 * h / dimensions.1, h),
+        (Some(w), None, _, _) => (w, dimensions.1 * w / dimensions.0),
         (Some(w), Some(h), _, _) => (w, h),
     }
 }

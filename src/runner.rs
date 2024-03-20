@@ -1,6 +1,7 @@
 use jwalk::WalkDir;
 use rayon::prelude::*;
 use std::{fs::create_dir_all, path::PathBuf};
+use std::path::Path;
 
 use crate::{
     parameters::{parameters::Parameters},
@@ -63,23 +64,24 @@ fn non_recursive_transform(params: &Parameters) {
         });
 }
 
-fn validate_path_is_image(path: &PathBuf) -> bool {
+fn validate_path_is_image(path: &Path) -> bool {
     match path.extension() {
-        Some(ext) => match ext.to_str() {
-            Some("jpg") | Some("jpeg") | Some("png") | Some("tiff") => true,
-            Some("webp") | Some("avif") => {
-                println!("Cannot read {} yet.", ext.to_str().unwrap());
-                false
-            }
-            _ => false,
-        },
+        Some(ext) => matches!(ext.to_str(), Some("jpg") | Some("jpeg") | Some("png") | Some("tiff") |
+            Some("webp") | Some("avif")),
         None => false,
     }
 }
 
 fn transform_image(path: &PathBuf, params: &Parameters) {
-    let mut img = Picture::new(path, &params);
-    params.resize_type.alter_img(params, &mut img);
-    params.rotation.alter_img(params, &mut img.image);
-    params.format.save_img(&mut img, params);
+    let img = Picture::new(path, params);
+    match img {
+        Ok(mut img) => {
+            params.resize_type.alter_img(params, &mut img);
+            params.rotation.alter_img(params, &mut img.image);
+            params.format.save_img(&mut img);
+        }
+        Err(e) => {
+            eprintln!("Could not open image: {:?} Error : {}", path, e);
+        }
+    }
 }

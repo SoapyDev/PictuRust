@@ -1,7 +1,8 @@
 use crate::parameters::{format::Format, parameters::Parameters, rotation};
 use exif::{Exif, In, Tag};
-use image::{io::Reader, DynamicImage, GenericImageView, ImageFormat};
+use image::{io::Reader, DynamicImage, GenericImageView, ImageFormat, ImageResult, ImageError};
 use std::{fs::File, io::BufReader, path::PathBuf};
+use std::path::Path;
 
 pub struct Picture {
     pub format: ImageFormat,
@@ -11,29 +12,29 @@ pub struct Picture {
 }
 
 impl Picture {
-    pub fn new(source: &PathBuf, params: &Parameters) -> Self {
-        let mut picture = create_picture(source, params);
+    pub fn new(source: &PathBuf, params: &Parameters) -> Result<Self, ImageError> {
+        let mut picture = create_picture(source, params)?;
         rotation::set_initial_rotation(get_rotation_code(source), &mut picture);
         set_img_dimensions(&mut picture);
-        picture
+        Ok(picture)
     }
 }
 
-fn create_picture(source: &PathBuf, params: &Parameters) -> Picture {
+fn create_picture(source: &PathBuf, params: &Parameters) -> Result<Picture, ImageError> {
     let reader = create_img_reader(source);
-    Picture {
+    Ok(Picture {
         output_path: create_output_path(source, params),
         format: get_format(&reader),
-        image: get_image(reader, &source),
+        image: get_image(reader)?,
         dimensions: (0, 0),
-    }
+    })
 }
 
 fn create_img_reader(source: &PathBuf) -> Reader<BufReader<File>> {
     Reader::open(source).expect("Failed to open File")
 }
 
-fn create_output_path(source: &PathBuf, params: &Parameters) -> PathBuf {
+fn create_output_path(source: &Path, params: &Parameters) -> PathBuf {
     match params.format {
         Format::None => params.output_dir.join(source.file_name().unwrap()),
         _ => params
@@ -42,25 +43,20 @@ fn create_output_path(source: &PathBuf, params: &Parameters) -> PathBuf {
     }
 }
 
-fn get_output_name(source: &PathBuf, format: &Format) -> PathBuf {
+fn get_output_name(source: &Path, format: &Format) -> PathBuf {
     let mut output_name = source.file_stem().unwrap().to_os_string();
     output_name.push(".");
     output_name.push(format.to_string());
     PathBuf::from(output_name)
 }
 
-fn get_format(reader: &Reader<BufReader<File>>) -> ImageFormat {
+fn get_format(reader: &Reader<BufReader<File>>) ->  ImageFormat{
     reader.format().unwrap_or(ImageFormat::Jpeg)
+
 }
 
-fn get_image(reader: Reader<BufReader<File>>, img_path: &PathBuf) -> DynamicImage {
-    match reader.decode() {
-        Ok(img) => img,
-        Err(_) => {
-            println!("Could not decode image: {}", img_path.display());
-            DynamicImage::new_rgb8(1, 1)
-        }
-    }
+fn get_image(reader: Reader<BufReader<File>>) -> ImageResult<DynamicImage> {
+    reader.decode()
 }
 
 fn get_rotation_code(path: &PathBuf) -> Option<u32> {
