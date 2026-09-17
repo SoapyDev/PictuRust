@@ -16,10 +16,10 @@ jobs:
     steps:
     - name: Install nasm
       run: sudo apt-get -y install nasm
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
     - name: Install rustfmt and clippy
       run: rustup component add rustfmt clippy
-    - uses: actions/cache@v4
+    - uses: actions/cache@v6
       with:
         path: |
           ~/.cargo/registry
@@ -47,8 +47,8 @@ jobs:
     - name: Add nasm to PATH (Windows)
       if: runner.os == 'Windows'
       run: echo "C:\Program Files\NASM" >> $env:GITHUB_PATH
-    - uses: actions/checkout@v4
-    - uses: actions/cache@v4
+    - uses: actions/checkout@v7
+    - uses: actions/cache@v6
       with:
         path: |
           ~/.cargo/registry
