@@ -42,6 +42,8 @@ pub struct Parameters {
     pub flip_horizontal: bool,
     #[arg(short = 'v', long, default_value = "false", required = false)]
     pub flip_vertical: bool,
+    #[arg(short = 'T', long, default_value_t = default_thread_count(), value_parser = threads_in_range, required = false)]
+    pub threads: usize,
 }
 
 impl Parameters {
@@ -98,5 +100,53 @@ fn quality_in_range(s: &str) -> Result<f32, String> {
         Ok(quality)
     } else {
         Err("Quality is not a between 1.0 and 100.0".to_string())
+    }
+}
+
+#[must_use]
+pub fn default_thread_count() -> usize {
+    std::thread::available_parallelism().map_or(1, std::num::NonZero::get)
+}
+
+fn threads_in_range(s: &str) -> Result<usize, Error> {
+    let threads = s
+        .parse::<usize>()
+        .map_err(|_| Error::msg("Not a valid number"))?;
+    let max = default_thread_count();
+    if (1..=max).contains(&threads) {
+        Ok(threads)
+    } else {
+        Err(Error::msg(format!(
+            "Threads must be between 1 and {max} (the number of threads available on this machine)"
+        )))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn default_thread_count_is_at_least_one() {
+        assert!(default_thread_count() >= 1);
+    }
+
+    #[test]
+    fn threads_in_range_accepts_one_and_the_machine_max() {
+        assert_eq!(threads_in_range("1").unwrap(), 1);
+        let max = default_thread_count();
+        assert_eq!(threads_in_range(&max.to_string()).unwrap(), max);
+    }
+
+    #[test]
+    fn threads_in_range_rejects_zero_and_above_max() {
+        assert!(threads_in_range("0").is_err());
+        let too_many = default_thread_count() + 1;
+        assert!(threads_in_range(&too_many.to_string()).is_err());
+    }
+
+    #[test]
+    fn threads_in_range_rejects_non_numeric_input() {
+        assert!(threads_in_range("not a number").is_err());
     }
 }

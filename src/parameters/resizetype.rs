@@ -101,6 +101,7 @@ mod tests {
             rotation: Rotation::None,
             flip_horizontal: false,
             flip_vertical: false,
+            threads: 1,
         }
     }
 

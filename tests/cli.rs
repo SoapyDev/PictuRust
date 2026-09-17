@@ -219,3 +219,51 @@ fn rejects_out_of_range_quality() {
         .assert()
         .failure();
 }
+
+#[test]
+fn accepts_a_thread_count_within_range() {
+    let output = tempfile::tempdir().unwrap();
+    bin()
+        .args([
+            "-i",
+            sample("Initial.png").to_str().unwrap(),
+            "-o",
+            output.path().to_str().unwrap(),
+            "-T",
+            "1",
+        ])
+        .assert()
+        .success();
+}
+
+#[test]
+fn rejects_a_thread_count_of_zero() {
+    let output = tempfile::tempdir().unwrap();
+    bin()
+        .args([
+            "-i",
+            sample("Initial.png").to_str().unwrap(),
+            "-o",
+            output.path().to_str().unwrap(),
+            "-T",
+            "0",
+        ])
+        .assert()
+        .failure();
+}
+
+#[test]
+fn rejects_a_thread_count_above_the_machine_maximum() {
+    let output = tempfile::tempdir().unwrap();
+    bin()
+        .args([
+            "-i",
+            sample("Initial.png").to_str().unwrap(),
+            "-o",
+            output.path().to_str().unwrap(),
+            "-T",
+            "999999",
+        ])
+        .assert()
+        .failure();
+}

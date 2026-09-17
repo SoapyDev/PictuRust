@@ -28,6 +28,7 @@ fn base_params(output_dir: PathBuf) -> Parameters {
         rotation: Rotation::None,
         flip_horizontal: false,
         flip_vertical: false,
+        threads: 1,
     }
 }
 

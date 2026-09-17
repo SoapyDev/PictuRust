@@ -88,6 +88,7 @@ mod tests {
             rotation,
             flip_horizontal: flip_h,
             flip_vertical: flip_v,
+            threads: 1,
         }
     }
 

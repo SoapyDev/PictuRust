@@ -2,7 +2,7 @@ use crate::parameters::{format::Format, resizetype::ResizeType};
 
 use super::parameters::Parameters;
 
-const TEXT: [&str; 21] = [
+const TEXT: [&str; 22] = [
     "############################# About ################################\n",
     "Made by SoapyDev",
     "Version : 1.0.0",
@@ -23,6 +23,7 @@ const TEXT: [&str; 21] = [
     "--rotation <r> : The rotation to be done on the image. The options are 90, 180, 270 and None.",
     "--flip_horizontal <s> : If the image should be flipped horizontally.",
     "--flip_vertical <v> : If the image should be flipped vertically.",
+    "--threads <T> : The number of threads to use. Between 1 and the number of threads available on this machine. Defaults to the maximum available.",
     "\n######################### Your Commands ############################\n",
 ];
 
@@ -31,7 +32,7 @@ pub fn display_user_text(param: &Parameters) {
     display_options(param);
 }
 
-fn display_text(lines: &[&str; 21]) {
+fn display_text(lines: &[&str; 22]) {
     for text in lines {
         println!("{text}");
     }
@@ -51,6 +52,7 @@ fn display_options(param: &Parameters) {
     options.push(format!("Rotation : {:?}", param.rotation));
     options.push(format!("Flip horizontally : {:?}", param.flip_horizontal));
     options.push(format!("Flip vertically : {:?}", param.flip_vertical));
+    options.push(format!("Threads : {}", param.threads));
     options.push(
         "\n######################### Your Results #############################\n".to_string(),
     );
