@@ -1029,6 +1029,7 @@ dependencies = [
  "ravif",
  "rayon",
  "rgb",
+ "serde_json",
  "tempfile",
  "webp",
 ]
