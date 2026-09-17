@@ -1,21 +1,19 @@
 use jwalk::WalkDir;
 use rayon::prelude::*;
-use std::{fs::create_dir_all, path::PathBuf};
 use std::path::Path;
+use std::{fs::create_dir_all, path::PathBuf};
 
-use crate::{
-    parameters::{parameters::Parameters},
-    picture::Picture,
-};
+use crate::{parameters::parameters::Parameters, picture::Picture};
 
 pub struct Runner;
 
 impl Runner {
-    pub fn run(&self, parameters: Parameters) {
+    pub fn run(&self, parameters: &Parameters) {
         let timer = std::time::Instant::now();
         create_or_validate_output_path(&parameters.output_dir);
-        transform_images(&parameters);
-        println!("Finished in {}ms", timer.elapsed().as_millis());
+        transform_images(parameters);
+        let elapsed = timer.elapsed().as_millis();
+        println!("Finished in {elapsed}ms");
     }
 }
 
@@ -26,12 +24,12 @@ fn create_or_validate_output_path(path: &PathBuf) {
 }
 
 fn transform_images(params: &Parameters) {
-    match params.input_dir.is_file() {
-        true => transform_image(&params.input_dir, params),
-        false => match params.recursive {
-            true => recursive_transform(params),
-            false => non_recursive_transform(params),
-        },
+    if params.input_dir.is_file() {
+        transform_image(&params.input_dir, params);
+    } else if params.recursive {
+        recursive_transform(params);
+    } else {
+        non_recursive_transform(params);
     }
 }
 
@@ -65,11 +63,19 @@ fn non_recursive_transform(params: &Parameters) {
 }
 
 fn validate_path_is_image(path: &Path) -> bool {
-    match path.extension() {
-        Some(ext) => matches!(ext.to_str(), Some("jpg") | Some("jpeg") | Some("png") | Some("tiff") |
-            Some("webp") | Some("avif")),
-        None => false,
-    }
+    path.extension().is_some_and(|ext| {
+        matches!(
+            ext.to_str(),
+            Some("jpg" | "jpeg" | "png" | "tiff" | "webp" | "avif")
+        )
+    })
+}
+
+/// Runs the full decode -> resize -> rotate/flip -> encode pipeline for a single
+/// image. Exposed for benchmarks and tests that need to exercise the pipeline
+/// without going through the CLI.
+pub fn transform_single(path: &PathBuf, params: &Parameters) {
+    transform_image(path, params);
 }
 
 fn transform_image(path: &PathBuf, params: &Parameters) {
@@ -81,7 +87,8 @@ fn transform_image(path: &PathBuf, params: &Parameters) {
             params.format.save_img(&mut img);
         }
         Err(e) => {
-            eprintln!("Could not open image: {:?} Error : {}", path, e);
+            let path = path.display();
+            eprintln!("Could not open image: {path} Error : {e}");
         }
     }
 }

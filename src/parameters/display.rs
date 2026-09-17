@@ -27,20 +27,20 @@ const TEXT: [&str; 21] = [
 ];
 
 pub fn display_user_text(param: &Parameters) {
-    display_text(TEXT);
+    display_text(&TEXT);
     display_options(param);
 }
 
-fn display_text(lines: [&str; 21]) {
-    for text in lines.iter() {
-        println!("{}", text);
+fn display_text(lines: &[&str; 21]) {
+    for text in lines {
+        println!("{text}");
     }
 }
 
 fn display_options(param: &Parameters) {
     let mut options: Vec<String> = Vec::with_capacity(15);
-    options.push(format!("Input directory : {:?}", param.input_dir));
-    options.push(format!("Output directory : {:?}", param.output_dir));
+    options.push(format!("Input directory : {}", param.input_dir.display()));
+    options.push(format!("Output directory : {}", param.output_dir.display()));
     options.push(format!("Recursive : {:?}", param.recursive));
     options.push(get_value(param.width, "Width", "Calculated"));
     options.push(get_value(param.height, "Height", "Calculated"));
@@ -51,26 +51,25 @@ fn display_options(param: &Parameters) {
     options.push(format!("Rotation : {:?}", param.rotation));
     options.push(format!("Flip horizontally : {:?}", param.flip_horizontal));
     options.push(format!("Flip vertically : {:?}", param.flip_vertical));
-    options.push("\n######################### Your Results #############################\n".to_string());
-    for text in options.iter() {
-        println!("{}", text);
+    options.push(
+        "\n######################### Your Results #############################\n".to_string(),
+    );
+    for text in &options {
+        println!("{text}");
     }
 }
 
 fn get_value(value: Option<u32>, parameter: &str, default_message: &str) -> String {
-    if let Some(v) = value {
-        format!("{} : {}", parameter, v)
-    } else {
-        format!("{} : {}", parameter, default_message)
-    }
+    value.map_or_else(
+        || format!("{parameter} : {default_message}"),
+        |v| format!("{parameter} : {v}"),
+    )
 }
 
 fn get_filter(params: &Parameters, options: &mut Vec<String>) {
-    match params.resize_type {
-        ResizeType::Exact => options.push(format!("{:?}", params.filter)),
-        ResizeType::Fill => options.push(format!("{:?}", params.filter)),
-        _ => {}
-    };
+    if matches!(params.resize_type, ResizeType::Exact | ResizeType::Fill) {
+        options.push(format!("{:?}", params.filter));
+    }
 }
 
 fn get_conversion_param(params: &Parameters, options: &mut Vec<String>) {
@@ -81,7 +80,5 @@ fn get_conversion_param(params: &Parameters, options: &mut Vec<String>) {
             options.push(format!("Speed : {:?}", params.speed));
         }
         _ => {}
-    };
+    }
 }
-
-
