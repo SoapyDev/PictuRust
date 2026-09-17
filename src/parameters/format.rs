@@ -4,7 +4,7 @@ use image::{ImageError, ImageFormat};
 
 use crate::picture::Picture;
 
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Format {
     Png,
     Jpeg,
@@ -15,6 +15,7 @@ pub enum Format {
 }
 
 impl Format {
+    #[must_use]
     pub fn new(s: &str) -> Self {
         match s.to_lowercase().trim() {
             "png" => Self::Png,
@@ -39,16 +40,28 @@ impl Format {
     }
 }
 
-impl Display for Format{
+impl Display for Format {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-       match self {
-           Format::Png => {write!(f, "png")}
-           Format::Jpeg => {write!(f, "jpeg")}
-           Format::Tiff => {write!(f, "tiff")}
-           Format::Webp => {write!(f, "webp")}
-           Format::Avif => {write!(f, "avif")}
-           Format::None => {write!(f, "")}
-       } 
+        match self {
+            Self::Png => {
+                write!(f, "png")
+            }
+            Self::Jpeg => {
+                write!(f, "jpeg")
+            }
+            Self::Tiff => {
+                write!(f, "tiff")
+            }
+            Self::Webp => {
+                write!(f, "webp")
+            }
+            Self::Avif => {
+                write!(f, "avif")
+            }
+            Self::None => {
+                write!(f, "")
+            }
+        }
     }
 }
 
@@ -75,7 +88,64 @@ fn create_new_output_path(img: &mut Picture) {
     }
 }
 
-fn save_format(img: &mut Picture, format: ImageFormat) -> Result<(), ImageError> {
-    img.image
-        .save_with_format(&img.output_path, format)
+fn save_format(img: &Picture, format: ImageFormat) -> Result<(), ImageError> {
+    img.image.save_with_format(&img.output_path, format)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use image::{DynamicImage, RgbImage};
+
+    fn picture(output_path: std::path::PathBuf) -> Picture {
+        Picture {
+            output_path,
+            dimensions: (1, 1),
+            image: DynamicImage::ImageRgb8(RgbImage::new(1, 1)),
+        }
+    }
+
+    #[test]
+    fn parses_known_formats_case_insensitively() {
+        assert_eq!(Format::new("Png"), Format::Png);
+        assert_eq!(Format::new("JPEG"), Format::Jpeg);
+        assert_eq!(Format::new("tiff"), Format::Tiff);
+        assert_eq!(Format::new("WebP"), Format::Webp);
+        assert_eq!(Format::new("avif"), Format::Avif);
+        assert_eq!(Format::new("bogus"), Format::None);
+    }
+
+    #[test]
+    fn displays_as_lowercase_extension() {
+        assert_eq!(Format::Png.to_string(), "png");
+        assert_eq!(Format::Jpeg.to_string(), "jpeg");
+        assert_eq!(Format::Tiff.to_string(), "tiff");
+        assert_eq!(Format::Webp.to_string(), "webp");
+        assert_eq!(Format::Avif.to_string(), "avif");
+        assert_eq!(Format::None.to_string(), "");
+    }
+
+    #[test]
+    fn avoids_overwriting_an_existing_output_file() {
+        let dir = tempfile::tempdir().unwrap();
+        let existing = dir.path().join("photo.png");
+        std::fs::write(&existing, b"placeholder").unwrap();
+
+        let mut img = picture(existing);
+        output_path_exists(&mut img);
+
+        assert_eq!(img.output_path, dir.path().join("photo_1.png"));
+    }
+
+    #[test]
+    fn keeps_bumping_suffix_until_a_free_name_is_found() {
+        let dir = tempfile::tempdir().unwrap();
+        std::fs::write(dir.path().join("photo.png"), b"placeholder").unwrap();
+        std::fs::write(dir.path().join("photo_1.png"), b"placeholder").unwrap();
+
+        let mut img = picture(dir.path().join("photo.png"));
+        output_path_exists(&mut img);
+
+        assert_eq!(img.output_path, dir.path().join("photo_2.png"));
+    }
 }

@@ -1,0 +1,67 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifact: picturust-linux
+            binary: picturust
+          - os: windows-latest
+            artifact: picturust-windows.exe
+            binary: picturust.exe
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Install nasm (Linux)
+      if: runner.os == 'Linux'
+      run: sudo apt-get -y install nasm
+    - name: Install nasm (Windows)
+      if: runner.os == 'Windows'
+      run: choco install nasm -y
+    - name: Add nasm to PATH (Windows)
+      if: runner.os == 'Windows'
+      run: echo "C:\Program Files\NASM" >> $env:GITHUB_PATH
+    - uses: actions/checkout@v7
+    - uses: actions/cache@v6
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          target
+        key: ${{ runner.os }}-cargo-release-${{ hashFiles('**/Cargo.lock') }}
+    - name: Build release binary
+      run: cargo build --release --verbose
+    - name: Rename artifact
+      shell: bash
+      run: cp "target/release/${{ matrix.binary }}" "${{ matrix.artifact }}"
+    - uses: actions/upload-artifact@v7
+      with:
+        name: ${{ matrix.artifact }}
+        path: ${{ matrix.artifact }}
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/download-artifact@v8
+      with:
+        path: artifacts
+        merge-multiple: true
+    - name: Create release
+      uses: softprops/action-gh-release@v3
+      with:
+        files: |
+          artifacts/picturust-linux
+          artifacts/picturust-windows.exe

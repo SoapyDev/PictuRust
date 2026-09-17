@@ -45,10 +45,13 @@ pub struct Parameters {
 }
 
 impl Parameters {
+    #[allow(clippy::new_without_default)]
+    #[must_use]
     pub fn new() -> Self {
         Self::parse()
     }
 
+    #[must_use]
     pub fn new_with_display() -> Self {
         let param = Self::new();
         display::display_user_text(&param);
@@ -56,18 +59,24 @@ impl Parameters {
     }
 }
 
+// These parsers always succeed today, but clap's `value_parser` requires a
+// `Result`-returning function signature to report arg-parsing errors.
+#[allow(clippy::unnecessary_wraps)]
 fn get_filter(s: &str) -> Result<imageops::FilterType, Error> {
     Ok(ResizeType::new_filter(s))
 }
 
+#[allow(clippy::unnecessary_wraps)]
 fn get_type(s: &str) -> Result<ResizeType, Error> {
     Ok(ResizeType::new(s))
 }
 
+#[allow(clippy::unnecessary_wraps)]
 fn get_format(s: &str) -> Result<Format, Error> {
     Ok(Format::new(s))
 }
 
+#[allow(clippy::unnecessary_wraps)]
 fn get_rotation(s: &str) -> Result<Rotation, Error> {
     Ok(Rotation::new(s))
 }
@@ -75,17 +84,19 @@ fn get_rotation(s: &str) -> Result<Rotation, Error> {
 const EFFORT_RANGE: RangeInclusive<u8> = 1..=10;
 fn get_effort(s: &str) -> Result<u8, Error> {
     let effort = s.parse::<u8>().expect("Effort is not between 1 and 10");
-    match EFFORT_RANGE.contains(&effort) {
-        true => Ok(effort),
-        false => Err(Error::msg("Effort is not between 1 and 10")),
+    if EFFORT_RANGE.contains(&effort) {
+        Ok(effort)
+    } else {
+        Err(Error::msg("Effort is not between 1 and 10"))
     }
 }
 
 const QUALITY_RANGE: RangeInclusive<f32> = 1.0..=100.0;
 fn quality_in_range(s: &str) -> Result<f32, String> {
     let quality = s.parse::<f32>().expect("Not a float");
-    match QUALITY_RANGE.contains(&quality) {
-        true => Ok(quality),
-        false => Err("Quality is not a between 1.0 and 100.0".to_string()),
+    if QUALITY_RANGE.contains(&quality) {
+        Ok(quality)
+    } else {
+        Err("Quality is not a between 1.0 and 100.0".to_string())
     }
 }
