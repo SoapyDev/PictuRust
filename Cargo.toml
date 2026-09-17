@@ -30,3 +30,8 @@ features = ["derive"]
 [dev-dependencies]
 assert_cmd = "2.0"
 tempfile = "3.14"
+criterion = "0.5"
+
+[[bench]]
+name = "pipeline"
+harness = false
