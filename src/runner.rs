@@ -8,7 +8,14 @@ use crate::{parameters::parameters::Parameters, picture::Picture};
 pub struct Runner;
 
 impl Runner {
+    /// # Panics
+    /// Panics if the global rayon thread pool has already been initialized
+    /// elsewhere in the process.
     pub fn run(&self, parameters: &Parameters) {
+        rayon::ThreadPoolBuilder::new()
+            .num_threads(parameters.threads)
+            .build_global()
+            .expect("Could not set thread pool size");
         let timer = std::time::Instant::now();
         create_or_validate_output_path(&parameters.output_dir);
         transform_images(parameters);
