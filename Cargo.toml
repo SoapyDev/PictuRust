@@ -5,6 +5,14 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[lib]
+name = "picturust"
+path = "src/lib.rs"
+
+[[bin]]
+name = "picturust"
+path = "src/main.rs"
+
 [dependencies]
 anyhow = { version = "1.0.86" }
 image = "0.25.1"
