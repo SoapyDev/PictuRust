@@ -40,10 +40,10 @@ fn recursive_transform(params: &Parameters) {
         .into_iter()
         .par_bridge()
         .for_each(|entry| {
-            if let Ok(entry) = entry {
-                if validate_path_is_image(&entry.path()) {
-                    transform_image(&entry.path(), params);
-                }
+            if let Ok(entry) = entry
+                && validate_path_is_image(&entry.path())
+            {
+                transform_image(&entry.path(), params);
             }
         });
 }
@@ -56,10 +56,10 @@ fn non_recursive_transform(params: &Parameters) {
         .par_bridge()
         .into_par_iter()
         .for_each(|entry| {
-            if let Ok(entry) = entry {
-                if validate_path_is_image(&entry.path()) {
-                    transform_image(&entry.path(), params);
-                }
+            if let Ok(entry) = entry
+                && validate_path_is_image(&entry.path())
+            {
+                transform_image(&entry.path(), params);
             }
         });
 }
