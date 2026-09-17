@@ -148,6 +148,7 @@ Most gain can be achieved by converting to webp or avif. Playing with the speed 
 - Controll over multithreading
 - Cropping tool
 - Verbose
+- Allow usage of GPU
 
 ## Flags
 
